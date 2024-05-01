@@ -3,10 +3,6 @@ import string
 def lexerAritmetico(expresiones):
     tokens = []
     for linea in expresiones:
-        # Eliminar los comentarios
-        # comentario_index = linea.find('//')
-        # if comentario_index != -1:
-        #     linea = linea[:comentario_index]
         # Tokenizar la línea
         palabra = ''
         in_numero_cientifico = False
@@ -16,17 +12,35 @@ def lexerAritmetico(expresiones):
                     tokens.append((palabra, determinar_tipo(palabra)))
                     palabra = ''
                     in_numero_cientifico = False
-            elif char in ('+', '*', '/', '=', '^', '(', ')'):
+            elif char in ('+', '*', '=', '^', '(', ')'):
                 if palabra:
                     tokens.append((palabra, determinar_tipo(palabra)))
                     palabra = ''
                     in_numero_cientifico = False
                 tokens.append((char, determinar_tipo(char)))
+            elif char in '/':
+                if palabra:
+                    if palabra[-1] == '/':
+                        palabra = linea.split("//", 1)[1].rstrip()
+                        tokens.append(( '//' + palabra, determinar_tipo('//' + palabra)))
+                        palabra = ''
+                        in_numero_cientifico = False
+                        break
+                    else:
+                        tokens.append((palabra, determinar_tipo(palabra)))
+                        palabra = ''
+                        in_numero_cientifico = False
+                palabra += char
+
             elif char == '-' or char.isdigit() or char in ('.', 'E', 'e'):
                 palabra += char
                 if char in ('E', 'e'):
                     in_numero_cientifico = True
             elif char.isalpha():
+                if palabra and palabra[-1] == '/':
+                    tokens.append((palabra, determinar_tipo(palabra)))
+                    palabra = ''
+                    in_numero_cientifico = False
                 palabra += char
             else:
                 if palabra:
@@ -38,12 +52,12 @@ def lexerAritmetico(expresiones):
     return tokens
 
 def determinar_tipo(token):
-    if token.replace('-','').isdigit():
+    if token.startswith('//'):
+        return 'Comentario'
+    elif token.replace('-','').isdigit():
         return 'Entero'
-    elif '.' in token and token.replace('.', '').replace('E' or 'e', '').replace('-','').isdigit():
+    elif '.' in token or 'E' in token or 'e' in token and token.replace('.', '').replace('E' or 'e', '').replace('-','').isdigit():
         return 'Real'
-    # elif 'E' in token or 'e' in token:s
-    #     return 'Real' if token[-1] != '-' else 'Real'
     elif token in ('+', '-'):
         return 'Suma' if token == '+' else 'Resta'
     elif token in ('*', '/', '^'):
@@ -56,8 +70,6 @@ def determinar_tipo(token):
         return 'Asignación'
     elif token.isalpha():
         return 'Variable'
-    elif token.startswith('//'):
-        return 'Comentario'
     else:
         return 'Identificador'
 
@@ -70,10 +82,9 @@ def main():
     tokens = lexerAritmetico(expresiones)
 
     # Imprimir la tabla de tokens
-    print("Token\t\tTipo")
-    print("-----------------------")
+    print("Token\t\t\t\tTipo")
+    print("------------------------------------------------------")
     for token, tipo in tokens:
-        print(f"{token}\t\t{tipo}")
+        print(f"{token}\t\t\t\t{tipo}")
 
-if __name__ == "__main__":
-    main()
+main()
