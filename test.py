@@ -1,12 +1,12 @@
 import string
 
-def tokenize(expresiones):
+def lexerAritmetico(expresiones):
     tokens = []
     for linea in expresiones:
         # Eliminar los comentarios
-        comentario_index = linea.find('//')
-        if comentario_index != -1:
-            linea = linea[:comentario_index]
+        # comentario_index = linea.find('//')
+        # if comentario_index != -1:
+        #     linea = linea[:comentario_index]
         # Tokenizar la línea
         palabra = ''
         in_numero_cientifico = False
@@ -16,32 +16,13 @@ def tokenize(expresiones):
                     tokens.append((palabra, determinar_tipo(palabra)))
                     palabra = ''
                     in_numero_cientifico = False
-            elif char in ('+', '*', '/', '=', '^'):
+            elif char in ('+', '*', '/', '=', '^', '(', ')'):
                 if palabra:
                     tokens.append((palabra, determinar_tipo(palabra)))
                     palabra = ''
                     in_numero_cientifico = False
                 tokens.append((char, determinar_tipo(char)))
-            elif char == '(':
-                if palabra:
-                    tokens.append((palabra, determinar_tipo(palabra)))
-                    palabra = ''
-                    in_numero_cientifico = False
-                tokens.append((char, 'Paréntesis que abre'))
-            elif char == ')':
-                if palabra:
-                    tokens.append((palabra, determinar_tipo(palabra)))
-                    palabra = ''
-                    in_numero_cientifico = False
-                tokens.append((char, 'Paréntesis que cierra'))
-            elif char == '-':
-                if palabra and (palabra.isdigit() or '.' in palabra):
-                    tokens.append((palabra, determinar_tipo(palabra)))
-                    palabra = ''
-                    in_numero_cientifico = False
-                palabra += char
-                in_numero_cientifico = True
-            elif char.isdigit() or char in ('.', 'E', 'e'):
+            elif char == '-' or char.isdigit() or char in ('.', 'E', 'e'):
                 palabra += char
                 if char in ('E', 'e'):
                     in_numero_cientifico = True
@@ -57,12 +38,12 @@ def tokenize(expresiones):
     return tokens
 
 def determinar_tipo(token):
-    if token.isdigit():
+    if token.replace('-','').isdigit():
         return 'Entero'
-    elif '.' in token and token.replace('.', '').replace('E', '').isdigit():
+    elif '.' in token and token.replace('.', '').replace('E' or 'e', '').replace('-','').isdigit():
         return 'Real'
-    elif 'E' in token or 'e' in token:
-        return 'Real' if token[-1] != '-' else 'Identificador'
+    # elif 'E' in token or 'e' in token:s
+    #     return 'Real' if token[-1] != '-' else 'Real'
     elif token in ('+', '-'):
         return 'Suma' if token == '+' else 'Resta'
     elif token in ('*', '/', '^'):
@@ -78,7 +59,7 @@ def determinar_tipo(token):
     elif token.startswith('//'):
         return 'Comentario'
     else:
-        return 'Que rayos es esto???????????????????????'
+        return 'Identificador'
 
 def main():
     # Leer el archivo de entrada
@@ -86,7 +67,7 @@ def main():
         expresiones = archivo.readlines()
 
     # Tokenizar las expresiones
-    tokens = tokenize(expresiones)
+    tokens = lexerAritmetico(expresiones)
 
     # Imprimir la tabla de tokens
     print("Token\t\tTipo")
