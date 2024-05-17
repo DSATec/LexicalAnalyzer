@@ -41,6 +41,7 @@ def lexerAritmetico(expresiones):
                 tokens.append((char, determinar_tipo(char)))
         if palabra:
             tokens.append((palabra, determinar_tipo(palabra)))
+        tokens.append(('', 'Enter'))
     return tokens
 
 def determinar_tipo(token):
