@@ -91,6 +91,4 @@ def main():
     for token, tipo in tokens:
         print(f"{token}\t\t\t\t{tipo}")
 
-main()
-
 
