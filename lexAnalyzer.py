@@ -62,7 +62,8 @@ def determinar_tipo(token):
     elif token[0].isalpha() and token.replace('_', '').isalnum():
         return 'Variable'
     elif 'e' in token.lower() and token.lower().count('e') == 1:    #Exponencial
-        if (determinar_tipo(token[0:token.lower().find('e')]) == 'Entero' or determinar_tipo(token[0:token.lower().find('e')]) == 'Real') and determinar_tipo(token[token.lower().find('e')+1:]) == 'Entero':
+        indexe = token.lower().find('e')
+        if (determinar_tipo(token[0:indexe]) == 'Entero' or determinar_tipo(token[0:indexe]) == 'Real') and determinar_tipo(token[indexe+1:]) == 'Entero':
             #Si antes de la e hay un entero o un numero real y despues hay un numero entero
             return 'Real'
         else:
