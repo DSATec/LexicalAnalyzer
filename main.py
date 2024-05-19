@@ -124,8 +124,12 @@ def stateMachine(currentState, token):
 def main():
     start = timeit.default_timer()
 
-    with open('input.txt', 'r') as archivo:
+    with open('input4.txt', 'r') as archivo:
         expresiones = archivo.readlines()
+    
+    css = open('style.css', 'w')
+    css.write(".mainDiv {display: flex;flex-direction: row;justify-content: space-around;} h1 {color: white;}")
+    css.close()
 
     if tokenSintax(expresiones) == False:
         print('Error de sintaxis')
@@ -137,19 +141,29 @@ def main():
 
     f = open('export.html','w')
 
-    f.write('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>act3.4</title></head></html><body style="background-color: #3E3E3E;">')
+    f.write('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>act3.4</title><link rel="stylesheet" href="style.css"></head></html><body style="background-color: #3E3E3E;"><div class="mainDiv"><div><h1>Proceso de AFD</h1>')
 
 
     for token in tokens:
+
         current_state = stateMachine(current_state, token)
         if current_state == 'qError':
             print('Expresión no válida', current_state )
-            f = open('export.html','w')
-            f.write('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>act3.4</title></head></html><body style="background-color: #3E3E3E;">')
             f.write('<div style="color: red;"')
-            f.write('><p>Expresión no válida</p></div>')
+            f.write('><p>Expresión no válida ')
+            f.write(current_state)
+            f.write('</p></div>')
             break
-        else: print('Expresión válida', current_state)
+        elif current_state != 'qError':
+            print('Expresión válida', current_state)
+            f.write('<div style="color: green;"')
+            f.write('><p>Expresión válida ')
+            f.write(current_state)
+            f.write('</p></div>')
+        else: 
+            print('Expresión válida', current_state)
+    f.write('</div><div><h1>Resultado</h1>')
+
 
     for token, tipo in tokens:
         if current_state == 'qError':
@@ -189,8 +203,8 @@ def main():
         if token == len(tokens) - 1:
             f.write('></div>')
             break
-
-    f.write('</body>')
+     
+    f.write('</div></body>')
     
     f.close()
     
