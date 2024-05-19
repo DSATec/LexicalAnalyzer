@@ -124,7 +124,7 @@ def stateMachine(currentState, token):
 def main():
     start = timeit.default_timer()
 
-    with open('input2.txt', 'r') as archivo:
+    with open('input.txt', 'r') as archivo:
         expresiones = archivo.readlines()
 
     if tokenSintax(expresiones) == False:
@@ -132,8 +132,6 @@ def main():
         exit()
 
     tokens = lexerAritmetico(expresiones)
-
-    print(tokens)
 
     current_state = 'q0'
 
@@ -145,13 +143,13 @@ def main():
     for token in tokens:
         current_state = stateMachine(current_state, token)
         if current_state == 'qError':
-            print('Expresión no válida', current_state )
+            print('Expresion no valida', current_state )
             f = open('export.html','w')
             f.write('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>act3.4</title></head></html><body style="background-color: #3E3E3E;">')
             f.write('<div style="color: red;"')
-            f.write('><p>Expresión no válida</p></div>')
+            f.write('><p>Expresion no valida</p></div>')
             break
-        else: print('Expresión válida', current_state)
+        else: print('Expresion valida', current_state)
 
     for token, tipo in tokens:
         if current_state == 'qError':
@@ -191,12 +189,12 @@ def main():
         if token == len(tokens) - 1:
             f.write('></div>')
             break
+
     f.write('</body>')
-
+    
     f.close()
-
+    
     stop = timeit.default_timer()
-
     print('Tiempo de ejecucion: ', stop - start)
 
 main()
