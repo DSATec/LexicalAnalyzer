@@ -143,13 +143,13 @@ def main():
     for token in tokens:
         current_state = stateMachine(current_state, token)
         if current_state == 'qError':
-            print('Expresion no valida', current_state )
+            print('Expresión no válida', current_state )
             f = open('export.html','w')
             f.write('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>act3.4</title></head></html><body style="background-color: #3E3E3E;">')
             f.write('<div style="color: red;"')
-            f.write('><p>Expresion no valida</p></div>')
+            f.write('><p>Expresión no válida</p></div>')
             break
-        else: print('Expresion valida', current_state)
+        else: print('Expresión válida', current_state)
 
     for token, tipo in tokens:
         if current_state == 'qError':
